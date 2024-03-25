@@ -36,7 +36,6 @@ const insertData = async () => {
       result
     );
 
-    // console.log(embeddingsArrays)
     const data = [];
 
     for (let idx = 0; idx < chunks.length; idx++) {
@@ -57,7 +56,6 @@ const insertData = async () => {
         fields_data: data,
     });
 
-    console.log(res);
   }
 }
 // const data = Array.from({ length: 2000 }, (v, k) => ({
@@ -71,12 +69,30 @@ const indexParams = {
   nlist: 16384,
 };
 
-const searchParams = {
-  anns_field: "book_intro",
-  topk: "2",
-  metric_type: "L2",
-  params: JSON.stringify({ nprobe: 10 }),
-};
+const query = async () => {
+
+  const question = "why do we usually hesitate to say No to people";
+  const queryEmbedding = await new OpenAIEmbeddings().embedQuery(question);
+
+  const searchParams = {
+    anns_field: "vector",
+    topk: "2",
+    metric_type: "L2",
+    params: JSON.stringify({ nprobe: 10 }),
+  };
+
+  const results = await milvusClient.search({
+      collection_name: "article",
+      expr: "",
+      vectors: [queryEmbedding],
+      search_params: searchParams,
+      vector_type: 101,
+  });
+
+  console.log(results.results)
+}
+
+
 
 const releaseCollections = async () => {
   await milvusClient.releaseCollection({  collection_name: "book",});
@@ -113,8 +129,9 @@ const main = async () => {
     // });
 
     // ----------------- vector search -----------------------------------
+    // query();
     // const results = await milvusClient.search({
-    //     collection_name: "book",
+    //     collection_name: "article",
     //     expr: "",
     //     vectors: [[0.1, 0.2]],
     //     search_params: searchParams,
