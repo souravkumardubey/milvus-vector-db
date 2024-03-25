@@ -1,26 +1,27 @@
 export const schema = {
-    collection_name: "book",
-    description: "Test book search",
+    collection_name: "article",
+    description: "article data search",
     fields: [
         {
-            name: "book_intro",
-            description: "",
-            data_type: 101,  
-            type_params: {
-                dim: "2",
-            },
-            indexName: "sodubey",
-        },
-        {
-            name: "book_id",
+            name: "id",
             data_type: 5, 
             is_primary_key: true,
             description: "",
         },
         {
-            name: "word_count",
-            data_type: 5,    
+            name: "vector",
             description: "",
+            data_type: 101,  
+            type_params: {
+                dim: "1536",
+            },
+            indexName: "sodubey",
+        },
+        {
+            name: "content",
+            data_type: "VarChar",    
+            description: "",
+            max_length: 1000
         },
     ],
 };
