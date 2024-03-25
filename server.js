@@ -21,8 +21,6 @@ const docs = await loader.load();
 const insertData = async () => {
 
   for (const doc of docs) {
-
-    console.log("1")
     
     const txtPath = doc.metadata.source;
     const text = doc.pageContent;
@@ -37,12 +35,11 @@ const insertData = async () => {
     const embeddingsArrays = await new OpenAIEmbeddings().embedDocuments(
       result
     );
-    console.log("2")
 
-    console.log(embeddingsArrays)
+    // console.log(embeddingsArrays)
     const data = [];
 
-    for (let idx = 0; idx < chunks.length; i++) {
+    for (let idx = 0; idx < chunks.length; idx++) {
 
       const chunk = chunks[idx];
       const vector = {
@@ -55,11 +52,12 @@ const insertData = async () => {
 
     }
 
-    await milvusClient.insert({
+    const res = await milvusClient.insert({
         collection_name: "article",
         fields_data: data,
     });
 
+    console.log(res);
   }
 }
 // const data = Array.from({ length: 2000 }, (v, k) => ({
@@ -108,7 +106,7 @@ const main = async () => {
     // });
       
     // ------------------- insert data into collection ------------------------------
-    insertData();
+    // insertData();
     // const res = await milvusClient.insert({
     //     collection_name: "book",
     //     fields_data: data,
